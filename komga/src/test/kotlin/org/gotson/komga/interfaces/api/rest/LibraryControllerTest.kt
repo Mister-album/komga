@@ -1,5 +1,7 @@
 package org.gotson.komga.interfaces.api.rest
 
+import org.assertj.core.api.Assertions.assertThat
+import org.gotson.komga.domain.model.Library
 import org.gotson.komga.domain.model.makeLibrary
 import org.gotson.komga.domain.persistence.LibraryRepository
 import org.hamcrest.Matchers
@@ -140,6 +142,132 @@ class LibraryControllerTest(
           status { isOk() }
           jsonPath("$.root") { value(Matchers.containsString("library1")) }
         }
+    }
+  }
+
+  @Nested
+  inner class LibraryType {
+    @Test
+    @WithMockCustomUser
+    fun `given an unclassified library when getting libraries then type is omitted`() {
+      mockMvc
+        .get(route)
+        .andExpect {
+          status { isOk() }
+          jsonPath("$[0].libraryType") { doesNotExist() }
+        }
+
+      mockMvc
+        .get("$route/${library.id}")
+        .andExpect {
+          status { isOk() }
+          jsonPath("$.libraryType") { doesNotExist() }
+        }
+    }
+
+    @Test
+    @WithMockCustomUser
+    fun `given a classified library when getting libraries then type is returned`() {
+      libraryRepository.update(library.copy(libraryType = Library.Type.COMICS))
+
+      mockMvc
+        .get(route)
+        .andExpect {
+          status { isOk() }
+          jsonPath("$[0].libraryType") { value("COMICS") }
+        }
+
+      mockMvc
+        .get("$route/${library.id}")
+        .andExpect {
+          status { isOk() }
+          jsonPath("$.libraryType") { value("COMICS") }
+        }
+    }
+
+    @Test
+    @WithMockCustomUser(roles = ["ADMIN"])
+    fun `given a library type when patching then it can be preserved updated and cleared`(
+      @TempDir tmp: Path,
+    ) {
+      libraryRepository.update(library.copy(root = tmp.toUri().toURL(), libraryType = Library.Type.COMICS))
+
+      mockMvc
+        .patch("$route/${library.id}") {
+          contentType = MediaType.APPLICATION_JSON
+          content = """{"name":"updated"}"""
+        }.andExpect {
+          status { isNoContent() }
+        }
+      assertThat(libraryRepository.findById(library.id).libraryType).isEqualTo(Library.Type.COMICS)
+
+      mockMvc
+        .patch("$route/${library.id}") {
+          contentType = MediaType.APPLICATION_JSON
+          content = """{"libraryType":"BOOKS"}"""
+        }.andExpect {
+          status { isNoContent() }
+        }
+      assertThat(libraryRepository.findById(library.id).libraryType).isEqualTo(Library.Type.BOOKS)
+
+      mockMvc
+        .patch("$route/${library.id}") {
+          contentType = MediaType.APPLICATION_JSON
+          content = """{"libraryType":null}"""
+        }.andExpect {
+          status { isNoContent() }
+        }
+      assertThat(libraryRepository.findById(library.id).libraryType).isNull()
+    }
+
+    @Test
+    @WithMockCustomUser(roles = ["ADMIN"])
+    fun `given an invalid library type when patching then return bad request`() {
+      mockMvc
+        .patch("$route/${library.id}") {
+          contentType = MediaType.APPLICATION_JSON
+          content = """{"libraryType":"INVALID"}"""
+        }.andExpect {
+          status { isBadRequest() }
+        }
+    }
+
+    @Test
+    @WithMockCustomUser(roles = ["ADMIN"])
+    fun `given a library type when adding a library then it is returned and persisted`(
+      @TempDir tmp: Path,
+    ) {
+      val root = tmp.toString().replace("\\", "\\\\")
+
+      mockMvc
+        .post(route) {
+          contentType = MediaType.APPLICATION_JSON
+          content = """{"name":"typed","root":"$root","libraryType":"BOOKS"}"""
+        }.andExpect {
+          status { isOk() }
+          jsonPath("$.libraryType") { value("BOOKS") }
+        }
+
+      assertThat(libraryRepository.findAll().first { it.name == "typed" }.libraryType).isEqualTo(Library.Type.BOOKS)
+    }
+
+    @Test
+    @WithMockCustomUser(roles = ["ADMIN"])
+    fun `given no library type when adding a library then type is omitted and null is persisted`(
+      @TempDir tmp: Path,
+    ) {
+      val root = tmp.toString().replace("\\", "\\\\")
+
+      mockMvc
+        .post(route) {
+          contentType = MediaType.APPLICATION_JSON
+          content = """{"name":"untyped","root":"$root"}"""
+        }.andExpect {
+          status { isOk() }
+          jsonPath("$.libraryType") { doesNotExist() }
+        }
+
+      assertThat(libraryRepository.findAll().first { it.name == "untyped" }.libraryType).isNull()
     }
   }
 

@@ -476,6 +476,7 @@
       "field_import_epub_series": "Series metadata",
       "field_import_local_artwork": "Local artwork",
       "field_import_mylar_series": "Series metadata",
+      "field_library_type": "Library type",
       "field_name": "Name",
       "field_oneshotsdirectory": "One-Shots directory",
       "field_repair_extensions": "Automatically repair incorrect file extensions",
@@ -718,6 +719,11 @@
       "DIVINA": "DIVINA",
       "EPUB": "EPUB",
       "PDF": "PDF"
+    },
+    "library_type": {
+      "BOOKS": "Books",
+      "COMICS": "Comics",
+      "NONE": "None"
     },
     "media_status": {
       "ERROR": "Error",
