@@ -1,5 +1,6 @@
 package org.gotson.komga.interfaces.api.rest.dto
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import org.gotson.komga.domain.model.Library
 import org.gotson.komga.infrastructure.web.toFilePath
 
@@ -7,6 +8,8 @@ data class LibraryDto(
   val id: String,
   val name: String,
   val root: String,
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  val libraryType: LibraryTypeDto?,
   val importComicInfoBook: Boolean,
   val importComicInfoSeries: Boolean,
   val importComicInfoCollection: Boolean,
@@ -41,6 +44,7 @@ fun Library.toDto(includeRoot: Boolean) =
     id = id,
     name = name,
     root = if (includeRoot) this.root.toFilePath() else "",
+    libraryType = libraryType?.toDto(),
     importComicInfoBook = importComicInfoBook,
     importComicInfoSeries = importComicInfoSeries,
     importComicInfoCollection = importComicInfoCollection,

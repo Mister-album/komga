@@ -36,6 +36,7 @@ class LibraryDaoTest(
     assertThat(created.lastModifiedDate).isCloseTo(now, offset)
     assertThat(created.name).isEqualTo(library.name)
     assertThat(created.root).isEqualTo(library.root)
+    assertThat(created.libraryType).isNull()
   }
 
   @Test
@@ -54,6 +55,7 @@ class LibraryDaoTest(
         copy(
           name = "LibraryUpdated",
           root = URL("file://library2"),
+          libraryType = Library.Type.BOOKS,
           importEpubSeries = false,
           importEpubBook = false,
           importComicInfoCollection = false,
@@ -92,6 +94,7 @@ class LibraryDaoTest(
 
     assertThat(modified.name).isEqualTo(updated.name)
     assertThat(modified.root).isEqualTo(updated.root)
+    assertThat(modified.libraryType).isEqualTo(updated.libraryType)
     assertThat(modified.importEpubSeries).isEqualTo(updated.importEpubSeries)
     assertThat(modified.importEpubBook).isEqualTo(updated.importEpubBook)
     assertThat(modified.importComicInfoCollection).isEqualTo(updated.importComicInfoCollection)
@@ -116,6 +119,21 @@ class LibraryDaoTest(
     assertThat(modified.scanInterval).isEqualTo(updated.scanInterval)
     assertThat(modified.scanOnStartup).isEqualTo(updated.scanOnStartup)
     assertThat(modified.scanDirectoryExclusions).containsExactlyInAnyOrderElementsOf(updated.scanDirectoryExclusions)
+  }
+
+  @Test
+  fun `given a classified library when clearing its type then null is persisted`() {
+    val library =
+      Library(
+        name = "Library",
+        root = URL("file://library"),
+        libraryType = Library.Type.COMICS,
+      )
+    libraryDao.insert(library)
+
+    libraryDao.update(library.copy(libraryType = null))
+
+    assertThat(libraryDao.findById(library.id).libraryType).isNull()
   }
 
   @Test

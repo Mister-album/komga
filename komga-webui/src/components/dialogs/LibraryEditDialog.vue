@@ -59,6 +59,16 @@
                     </v-col>
                   </v-row>
 
+                  <v-row>
+                    <v-col>
+                      <v-select
+                        v-model="form.libraryType"
+                        :items="libraryTypes"
+                        :label="$t('dialog.edit_library.field_library_type')"
+                      />
+                    </v-col>
+                  </v-row>
+
                   <v-row justify="center">
                     <v-col cols="8" align-self="center">
                       <file-browser-dialog
@@ -446,7 +456,7 @@ import FileBrowserDialog from '@/components/dialogs/FileBrowserDialog.vue'
 import Vue from 'vue'
 import {required} from 'vuelidate/lib/validators'
 import {ERROR} from '@/types/events'
-import {ScanIntervalDto, SeriesCoverDto} from '@/types/enum-libraries'
+import {LibraryTypeDto, ScanIntervalDto, SeriesCoverDto} from '@/types/enum-libraries'
 import {LibraryDto} from '@/types/komga-libraries'
 
 export default Vue.extend({
@@ -460,6 +470,7 @@ export default Vue.extend({
       form: {
         name: '',
         path: '',
+        libraryType: null as LibraryTypeDto | null,
         importComicInfoBook: true,
         importComicInfoSeries: true,
         importComicInfoCollection: true,
@@ -503,6 +514,15 @@ export default Vue.extend({
         text: this.$t(`enums.series_cover.${x}`),
         value: x,
       }))
+    },
+    libraryTypes(): any[] {
+      return [{
+        text: this.$t('enums.library_type.NONE'),
+        value: null,
+      }, ...Object.keys(LibraryTypeDto).map(x => ({
+        text: this.$t(`enums.library_type.${x}`),
+        value: x,
+      }))]
     },
     scanInterval(): any[] {
       return Object.keys(ScanIntervalDto).map(x => ({
@@ -616,6 +636,7 @@ export default Vue.extend({
     dialogReset(library?: LibraryDto) {
       this.form.name = library ? library.name : ''
       this.form.path = library ? library.root : ''
+      this.form.libraryType = library?.libraryType ?? null
       this.form.importComicInfoBook = library ? library.importComicInfoBook : true
       this.form.importComicInfoSeries = library ? library.importComicInfoSeries : true
       this.form.importComicInfoCollection = library ? library.importComicInfoCollection : true
@@ -653,6 +674,7 @@ export default Vue.extend({
         return {
           name: this.form.name,
           root: this.form.path,
+          libraryType: this.form.libraryType,
           importComicInfoBook: this.form.importComicInfoBook,
           importComicInfoSeries: this.form.importComicInfoSeries,
           importComicInfoCollection: this.form.importComicInfoCollection,

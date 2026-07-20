@@ -14,6 +14,11 @@ class LibraryUpdateDto {
   @get:NullOrNotBlank
   val root: String? = null
 
+  var libraryType: LibraryTypeDto?
+    by Delegates.observable(null) { prop, _, _ ->
+      isSet[prop.name] = true
+    }
+
   val importComicInfoBook: Boolean? = null
   val importComicInfoSeries: Boolean? = null
   val importComicInfoCollection: Boolean? = null

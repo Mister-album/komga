@@ -94,6 +94,7 @@ class LibraryController(
           Library(
             name = library.name,
             root = filePathToUrl(library.root),
+            libraryType = library.libraryType?.toDomain(),
             importComicInfoBook = library.importComicInfoBook,
             importComicInfoSeries = library.importComicInfoSeries,
             importComicInfoCollection = library.importComicInfoCollection,
@@ -166,6 +167,7 @@ class LibraryController(
             id = libraryId,
             name = name ?: existing.name,
             root = root?.let { filePathToUrl(root!!) } ?: existing.root,
+            libraryType = if (isSet("libraryType")) libraryType?.toDomain() else existing.libraryType,
             importComicInfoBook = importComicInfoBook ?: existing.importComicInfoBook,
             importComicInfoSeries = importComicInfoSeries ?: existing.importComicInfoSeries,
             importComicInfoCollection = importComicInfoCollection ?: existing.importComicInfoCollection,

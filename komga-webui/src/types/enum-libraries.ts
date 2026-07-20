@@ -13,3 +13,8 @@ export enum ScanIntervalDto {
   DAILY = 'DAILY',
   WEEKLY = 'WEEKLY',
 }
+
+export enum LibraryTypeDto {
+  COMICS = 'COMICS',
+  BOOKS = 'BOOKS',
+}

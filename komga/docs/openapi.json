@@ -9667,6 +9667,13 @@
           "importMylarSeries": {
             "type": "boolean"
           },
+          "libraryType": {
+            "type": "string",
+            "enum": [
+              "COMICS",
+              "BOOKS"
+            ]
+          },
           "name": {
             "type": "string",
             "minLength": 1
@@ -9807,6 +9814,13 @@
           },
           "importMylarSeries": {
             "type": "boolean"
+          },
+          "libraryType": {
+            "type": "string",
+            "enum": [
+              "COMICS",
+              "BOOKS"
+            ]
           },
           "name": {
             "type": "string"
@@ -9949,6 +9963,13 @@
           },
           "importMylarSeries": {
             "type": "boolean"
+          },
+          "libraryType": {
+            "type": "string",
+            "enum": [
+              "COMICS",
+              "BOOKS"
+            ]
           },
           "name": {
             "type": "string"

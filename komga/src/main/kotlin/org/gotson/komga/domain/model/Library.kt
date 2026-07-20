@@ -9,6 +9,7 @@ import kotlin.io.path.toPath
 data class Library(
   val name: String,
   val root: URL,
+  val libraryType: Type? = null,
   val importComicInfoBook: Boolean = true,
   val importComicInfoSeries: Boolean = true,
   val importComicInfoCollection: Boolean = true,
@@ -40,6 +41,11 @@ data class Library(
   override val createdDate: LocalDateTime = LocalDateTime.now(),
   override val lastModifiedDate: LocalDateTime = createdDate,
 ) : Auditable {
+  enum class Type {
+    COMICS,
+    BOOKS,
+  }
+
   enum class SeriesCover {
     FIRST,
     FIRST_UNREAD_OR_FIRST,

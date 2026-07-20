@@ -86,6 +86,7 @@ class LibraryDao(
       .set(l.ID, library.id)
       .set(l.NAME, library.name)
       .set(l.ROOT, library.root.toString())
+      .set(l.LIBRARY_TYPE, library.libraryType?.toString())
       .set(l.IMPORT_COMICINFO_BOOK, library.importComicInfoBook)
       .set(l.IMPORT_COMICINFO_SERIES, library.importComicInfoSeries)
       .set(l.IMPORT_COMICINFO_COLLECTION, library.importComicInfoCollection)
@@ -123,6 +124,7 @@ class LibraryDao(
       .update(l)
       .set(l.NAME, library.name)
       .set(l.ROOT, library.root.toString())
+      .set(l.LIBRARY_TYPE, library.libraryType?.toString())
       .set(l.IMPORT_COMICINFO_BOOK, library.importComicInfoBook)
       .set(l.IMPORT_COMICINFO_SERIES, library.importComicInfoSeries)
       .set(l.IMPORT_COMICINFO_COLLECTION, library.importComicInfoCollection)
@@ -178,6 +180,7 @@ class LibraryDao(
     Library(
       name = name,
       root = URL(root),
+      libraryType = libraryType?.let { Library.Type.valueOf(it) },
       importComicInfoBook = importComicinfoBook,
       importComicInfoSeries = importComicinfoSeries,
       importComicInfoCollection = importComicinfoCollection,

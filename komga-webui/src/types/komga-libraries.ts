@@ -1,9 +1,10 @@
-import {ScanIntervalDto, SeriesCoverDto} from '@/types/enum-libraries'
+import {LibraryTypeDto, ScanIntervalDto, SeriesCoverDto} from '@/types/enum-libraries'
 
 export interface LibraryDto {
   id: string,
   name: string,
   root: string,
+  libraryType?: LibraryTypeDto,
   importComicInfoBook: boolean,
   importComicInfoSeries: boolean,
   importComicInfoCollection: boolean,
@@ -40,6 +41,7 @@ export interface LibraryDto {
 export interface LibraryCreationDto {
   name: string,
   root: string,
+  libraryType: LibraryTypeDto | null,
   importComicInfoBook: boolean,
   importComicInfoSeries: boolean,
   importComicInfoCollection: boolean,
@@ -71,6 +73,7 @@ export interface LibraryCreationDto {
 export interface LibraryUpdateDto {
   name: string,
   root: string,
+  libraryType: LibraryTypeDto | null,
   importComicInfoBook: boolean,
   importComicInfoSeries: boolean,
   importComicInfoCollection: boolean,

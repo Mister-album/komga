@@ -476,6 +476,7 @@
       "field_import_epub_series": "系列元資料",
       "field_import_local_artwork": "本地圖片(插圖)",
       "field_import_mylar_series": "系列元資料",
+      "field_library_type": "書庫類型",
       "field_name": "名稱",
       "field_oneshotsdirectory": "單發作品目錄",
       "field_repair_extensions": "自動修復不正確的檔案擴展名",
@@ -718,6 +719,11 @@
       "DIVINA": "DIVINA",
       "EPUB": "EPUB",
       "PDF": "PDF"
+    },
+    "library_type": {
+      "BOOKS": "書籍",
+      "COMICS": "漫畫",
+      "NONE": "無"
     },
     "media_status": {
       "ERROR": "錯誤",
